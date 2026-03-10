@@ -1,14 +1,20 @@
 # Crypto Trading Agent
 
-Autonomous AI-powered crypto trading agent. Watches live markets, reasons about price action using Claude, and executes paper trades — no human in the loop.
+Paper trading platform with live market data, pluggable strategies, and a real-time dashboard. Built as the foundation for an autonomous AI-powered trading agent.
+
+## Status
+
+**Phase 1 (current)**: Trading infrastructure — live data, paper execution, rule-based strategies, dashboard. No AI yet.
+
+**Phase 2 (next)**: The "agent" part — Claude analyzes market conditions, adapts strategy selection, and makes autonomous decisions with no human in the loop.
 
 ## How It Works
 
-1. **Market Feed** pulls live OHLCV candles from Kraken every 10 seconds
-2. **Strategy Engine** evaluates pluggable strategies (SMA Crossover, RSI) on each candle close
-3. **AI Agent** (coming) uses Claude to analyze market conditions, adapt strategies, and make autonomous trading decisions
-4. **Paper Trader** simulates order execution with realistic slippage (0.05%) and fees (0.1%)
-5. **Dashboard** shows portfolio, trades, charts, and strategy performance in real time
+1. **Market Feed** pulls live OHLCV candles from Kraken every 10 seconds via ccxt
+2. **Strategy Engine** evaluates pluggable rule-based strategies (SMA Crossover, RSI) on each candle close
+3. **Paper Trader** simulates order execution with realistic slippage (0.05%) and fees (0.1%)
+4. **Risk Engine** enforces position limits (max 20%, 5% allocation per trade)
+5. **Dashboard** shows portfolio, trades, candlestick charts, and strategy performance in real time
 
 ## Architecture
 
@@ -92,6 +98,12 @@ GET  /api/market/:symbol       - OHLCV candles for a symbol
 POST /api/trades               - Execute a manual trade
 POST /api/strategies/:name     - Toggle a strategy on/off
 ```
+
+## Roadmap
+
+- [ ] **Phase 2: AI Agent** — Claude-powered market analysis, adaptive strategy selection, autonomous trading decisions
+- [ ] **Phase 3: Multi-Agent** — Separate agents for research, risk assessment, and execution
+- [ ] **Phase 4: Live Trading** — Graduate from paper to real orders on Kraken
 
 ## License
 
