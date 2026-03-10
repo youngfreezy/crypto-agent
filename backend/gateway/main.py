@@ -156,12 +156,14 @@ def create_app() -> FastAPI:
     from backend.gateway.routes.trades import router as trades_router
     from backend.gateway.routes.strategies import router as strategies_router
     from backend.gateway.routes.market import router as market_router
+    from backend.gateway.routes.ai_analyses import router as ai_analyses_router
 
     app.include_router(health_router)
     app.include_router(portfolio_router)
     app.include_router(trades_router)
     app.include_router(strategies_router)
     app.include_router(market_router)
+    app.include_router(ai_analyses_router)
 
     return app
 

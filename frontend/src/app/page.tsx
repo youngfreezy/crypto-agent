@@ -43,6 +43,14 @@ interface Trade {
   created_at: string;
 }
 
+interface AIAnalysis {
+  symbol: string;
+  action: string;
+  strength: number;
+  reasoning: string;
+  created_at: string;
+}
+
 function fmt(n: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -60,15 +68,17 @@ export default function DashboardPage() {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
   const [history, setHistory] = useState<{ time: string; value: number }[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [aiLatest, setAiLatest] = useState<AIAnalysis[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [p, h, t] = await Promise.all([
+        const [p, h, t, ai] = await Promise.all([
           api<Portfolio>("/api/portfolio"),
           api<HistoryPoint[]>("/api/portfolio/history"),
           api<Trade[]>("/api/trades?limit=5"),
+          api<AIAnalysis[]>("/api/ai-analyses/latest").catch(() => []),
         ]);
         setPortfolio(p);
         setHistory(
@@ -78,6 +88,7 @@ export default function DashboardPage() {
           }))
         );
         setTrades(t);
+        setAiLatest(ai);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch data");
@@ -150,6 +161,43 @@ export default function DashboardPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* AI Agent latest */}
+      {aiLatest.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>AI Agent Analysis</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {aiLatest.map((a) => (
+                <div key={a.symbol} className="p-3 rounded-lg bg-muted/30 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-sm">{a.symbol}</span>
+                    <Badge
+                      variant={
+                        a.action === "buy"
+                          ? "default"
+                          : a.action === "sell"
+                            ? "destructive"
+                            : "secondary"
+                      }
+                    >
+                      {a.action.toUpperCase()}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground line-clamp-2">
+                    {a.reasoning}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(a.created_at).toLocaleTimeString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Recent trades */}
       <Card>

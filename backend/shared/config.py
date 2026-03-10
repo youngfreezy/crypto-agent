@@ -37,6 +37,11 @@ class Settings(BaseSettings):
     CANDLE_HISTORY_DAYS: int = 7
     POLL_INTERVAL_SECONDS: int = 10
 
+    # --- AI Agent ---
+    ANTHROPIC_API_KEY: str = ""
+    AI_EVAL_INTERVAL_MINUTES: int = 5
+    AI_PRICE_CHANGE_THRESHOLD: float = 0.001  # 0.1% min move to trigger eval
+
     # --- Logging ---
     LOG_LEVEL: str = "INFO"
 

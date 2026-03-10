@@ -40,3 +40,10 @@ def get_active() -> dict[str, list[str]]:
 # Register built-in strategies at module load time
 register(SMACrossoverStrategy())
 register(RSIStrategy())
+
+# Register AI strategy only if API key is configured
+from backend.shared.config import get_settings as _get_settings
+
+if _get_settings().ANTHROPIC_API_KEY:
+    from backend.strategies.claude_strategy import ClaudeStrategy
+    register(ClaudeStrategy())

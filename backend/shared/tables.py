@@ -72,6 +72,24 @@ def ensure_tables(conn) -> None:
                 created_at      TIMESTAMPTZ DEFAULT NOW(),
                 updated_at      TIMESTAMPTZ DEFAULT NOW()
             );
+
+            CREATE TABLE IF NOT EXISTS ai_analyses (
+                id              BIGSERIAL PRIMARY KEY,
+                symbol          TEXT NOT NULL,
+                action          TEXT NOT NULL,
+                strength        DOUBLE PRECISION,
+                reasoning       TEXT NOT NULL,
+                market_summary  TEXT,
+                indicators      JSONB,
+                model           TEXT DEFAULT 'claude-haiku-4-5',
+                input_tokens    INTEGER,
+                output_tokens   INTEGER,
+                latency_ms      INTEGER,
+                created_at      TIMESTAMPTZ DEFAULT NOW()
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_ai_analyses_symbol_created
+                ON ai_analyses (symbol, created_at DESC);
         """)
     logger.info("All tables ensured.")
 

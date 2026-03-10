@@ -5,3 +5,4 @@ psycopg[binary]>=3.1
 psycopg-pool>=3.1
 ccxt>=4.0
 numpy>=1.26
+anthropic>=0.42.0
